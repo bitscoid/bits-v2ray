@@ -12,7 +12,7 @@ jobs:
       NAME: ${{ secrets.GH_USER }}
       TOKEN: ${{ secrets.GH_TOKEN }}
       BRANCH_BASE_NAME: x
-      BRANCH_COUNT: 300
+      BRANCH_COUNT: 100
 
     steps:
       - name: ⚙️ Setup
