@@ -71,8 +71,8 @@ export function EncodeConfig(conf: Config): string {
         net: conf.network,
         path: conf.path,
         host: conf.host,
-        alpn: conf.alpn,
-        fp: conf.fp,
+        // alpn: conf.alpn,
+        // fp: conf.fp,
         "ws-opts": conf["ws-opts"],
         udp: conf.udp,
         merged: conf.merged || false,
@@ -168,10 +168,6 @@ export function EncodeConfig(conf: Config): string {
       }#${
         encodeURIComponent(conf.name)
       }`;
-    // } else if (conf.type == "ssr") {
-    //   return `${conf.type}://${Buffer.from(
-    //   `${conf.server}:${conf.port}:origin:${conf.cipher}:${conf["protocol-param"]}
-    //   , "utf-8").toString("base64")}`
     }
   } catch (e) {
     // console.log(e)
@@ -199,8 +195,8 @@ export function DecodeConfig(configStr: string): Config {
         network: conf?.net,
         path: conf?.path || "",
         host: conf?.host || conf?.sni,
-        alpn: conf?.alpn,
-        fp: conf["client-fingerprint"] || conf?.fp,
+        // alpn: conf?.alpn,
+        // fp: conf["client-fingerprint"] || conf?.fp,
         "ws-opts": {
           path: conf?.path || "",
           headers: {
@@ -234,8 +230,8 @@ export function DecodeConfig(configStr: string): Config {
         network: optionsObj.type || (optionsObj.net || "tcp"),
         path: optionsObj.path || "",
         host: optionsObj.host || optionsObj.Host || "",
-        alpn: optionsObj.alpn || "",
-        fp: optionsObj.fp || "",
+        // alpn: optionsObj.alpn || "",
+        // fp: optionsObj.fp || "",
         pbk: optionsObj.pbk || "",
         headerType: optionsObj.headerType || "",
         "ws-opts": {
