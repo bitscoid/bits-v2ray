@@ -6,7 +6,7 @@ import { RemoteSocketWrapper, CustomArrayBuffer, VlessHeader, UDPOutbound, Confi
 
 const WS_READY_STATE_OPEN: number = 1
 const WS_READY_STATE_CLOSING: number = 2
-const proxyIPs   = ['194.36.179.240'];
+const proxyIPs   = ['172.232.235.85'];
 let proxyIP      = proxyIPs[Math.floor(Math.random() * proxyIPs.length)]; // Proxy IP Rotator
 let uuid: string = ""
 
@@ -268,7 +268,7 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 
 	transformStream.readable.pipeTo(new WritableStream({
 		async write(chunk: any) {
-			const resp = await fetch('https://sky.rethinkdns.com/1:-Pf_____9_8A_AMAIgE8kMABVDDmKOHTAKg=',
+			const resp = await fetch('https://dns.google/dns-query',
 				{
 					method: 'POST',
 					headers: {
