@@ -51,13 +51,13 @@ export async function PostLogin(request: Request, env: Env): Promise<Response> {
   const url: URL = new URL(request.url)
   const formData = await request.formData()
   const password: string = formData.get("password") || ""
-  let hashedPassword: string = await env.settings.get("Password") || ""
+  let hashedPassword: string = await env.configs.get("Password") || ""
   await Delay(1000)
   const match = await bcrypt.compare(password, hashedPassword)
     
   if (match) {
     const token: string = GenerateToken(24)
-    await env.settings.put("Token", token)
+    await env.configs.put("Token", token)
     return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/?token=${token}`, 302)
   }
 
