@@ -62,5 +62,5 @@ export interface WSHeaders {
 }
 
 export interface Env {
-  settings: KVNamespace
+  configs: KVNamespace
 }
