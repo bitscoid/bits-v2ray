@@ -298,8 +298,7 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 }
 
 async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote: string, portRemote: number, rawClientData: Uint8Array, webSocket: WebSocket, vlessResponseHeader: Uint8Array): Promise<void> {
-	async function connectAndWrite(address: string, port: number, env: Env) {
-  		const proxyIP: string | null = await env.settings.get("ProxyIP")
+	async function connectAndWrite(address: string, port: number) {
 		const tcpSocket: Socket = connect({
 			hostname: address,
 			port: port,
@@ -311,7 +310,8 @@ async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote
 		return tcpSocket
 	}
 
-	async function retry() {
+	async function retry(env: Env) {
+  		const proxyIP: string | null = await env.settings.get("ProxyIP")
 		const tcpSocket: Socket = await connectAndWrite(proxyIP || addressRemote, portRemote)
 		tcpSocket.closed.catch((error: any) => { }).finally(() => {
 			SafeCloseWebSocket(webSocket)
