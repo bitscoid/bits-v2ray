@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     name: "🌲 Create Branches"
     env:
-      EMAIL: ${{ secrets.GH_EMAIL }}
-      NAME: ${{ secrets.GH_USERNAME }}
-      TOKEN: ${{ secrets.TOKEN }}
+      EMAIL: ${{ secrets.GH_MAIL }}
+      NAME: ${{ secrets.GH_USER }}
+      TOKEN: ${{ secrets.GH_TOKEN }}
       BRANCH_BASE_NAME: x
       BRANCH_COUNT: 300
 
