@@ -6,6 +6,7 @@ import { RemoteSocketWrapper, CustomArrayBuffer, VlessHeader, UDPOutbound, Confi
 
 const WS_READY_STATE_OPEN: number = 1
 const WS_READY_STATE_CLOSING: number = 2
+let proxyIP: string = ""
 let uuid: string = ""
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
@@ -264,10 +265,9 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 		}
 	})
 
-	// only handle dns udp for now
 	transformStream.readable.pipeTo(new WritableStream({
 		async write(chunk: any) {
-			const resp = await fetch('https://1.1.1.1/dns-query',
+			const resp = await fetch('https://dns.google/dns-query',
 				{
 					method: 'POST',
 					headers: {
@@ -310,8 +310,9 @@ async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote
 		return tcpSocket
 	}
 
-	async function retry() {
-		const tcpSocket: Socket = await connectAndWrite(addressRemote, portRemote)
+	async function retry(env: Env) {
+    let proxyIP: string | null = await env.settings.get("ProxyIP")
+		const tcpSocket: Socket = await connectAndWrite(proxyIP || addressRemote, portRemote)
 		tcpSocket.closed.catch((error: any) => { }).finally(() => {
 			SafeCloseWebSocket(webSocket)
 		})
