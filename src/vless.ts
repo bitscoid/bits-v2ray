@@ -7,9 +7,10 @@ import { RemoteSocketWrapper, CustomArrayBuffer, VlessHeader, UDPOutbound, Confi
 const WS_READY_STATE_OPEN: number = 1
 const WS_READY_STATE_CLOSING: number = 2
 let uuid: string = ""
-let proxyIP: string = ""
+var proxyIP: string = ""
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
+  globalThis.proxyIP = await env.settings.get("ProxyIP")
   let uuid: string | null = await env.settings.get("UUID")
   let configList: Array<Config> = []
   if (uuid) {
@@ -311,7 +312,6 @@ async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote
 	}
 
 	async function retry() {
-  		let proxyIP = "194.36.179.240"
 		const tcpSocket: Socket = await connectAndWrite(proxyIP || addressRemote, portRemote)
 		tcpSocket.closed.catch((error: any) => { }).finally(() => {
 			SafeCloseWebSocket(webSocket)
