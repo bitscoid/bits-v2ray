@@ -13,7 +13,8 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
     if (hash && url.searchParams.get("token") != token) {
       return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/login`, 302)
     }
-
+		
+		const proxyIP: string = await env.settings.get("ProxyIP") || "8.222.193.65"
     const maxConfigs: number = parseInt(await env.settings.get("MaxConfigs") || "200")
     const protocols: Array<string> = (await env.settings.get("Protocols"))?.split("\n") || defaultProtocols
     const alpnList: Array<string> = (await env.settings.get("ALPNs"))?.split("\n") || defaultALPNList
@@ -23,7 +24,7 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
     const configs: Array<string> = (await env.settings.get("Configs"))?.split("\n") || []
     const includeOriginalConfigs: string = await env.settings.get("IncludeOriginalConfigs") || "yes"
     const includeMergedConfigs: string = await env.settings.get("IncludeMergedConfigs") || "yes"
-		
+
     var uuid: string = await env.settings.get("UUID") || ""
     if (!IsValidUUID(uuid)) {
       uuid = uuidv4()
@@ -117,6 +118,13 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
               <label class="form-check-label" for="original-ckeck">Vless, Vmess & Trojan Agregator</label>
             </div>
           </div>
+        </div>
+        <div class="mb-1 p-1">
+          <label for="proxy-ip" class="form-label fw-bold">
+            IP Proxy :
+          </label>
+          <input type="text" name="proxy-ip" class="form-control" id="proxy-ip" value="${proxyIP}" />
+          <div class="form-text"></div>
         </div>
         <div class="mb-1 p-1">
           <label for="max-configs" class="form-label fw-bold">
@@ -310,6 +318,7 @@ export async function PostPanel(request: Request, env: Env): Promise<Response> {
         await env.settings.put("Token", token)
       }
       
+      await env.settings.put("ProxyIP", formData.get("proxy-ip") || "8.222.193.65")
       await env.settings.put("MaxConfigs", formData.get("max") || "200")
       await env.settings.put("Protocols", formData.getAll("protocols")?.join("\n").trim())
       await env.settings.put("ALPNs", formData.get("alpn_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
@@ -320,6 +329,7 @@ export async function PostPanel(request: Request, env: Env): Promise<Response> {
       await env.settings.put("IncludeOriginalConfigs", formData.get("original") || "no")
       await env.settings.put("IncludeMergedConfigs", formData.get("merged") || "no")
     } else {
+      await env.settings.delete("ProxyIP")
       await env.settings.delete("MaxConfigs")
       await env.settings.delete("Protocols")
       await env.settings.delete("ALPNs")
