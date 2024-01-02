@@ -6,10 +6,9 @@ import { GetMultipleRandomElements, RemoveDuplicateConfigs, AddNumberToConfigs, 
 import { defaultProviders, defaultProtocols, defaultALPNList, defaultPFList } from "./variables"
 import { Env, Config } from "./interfaces"
 
-
 export async function GetConfigList(url: URL, env: Env): Promise<Array<Config>> {
-  let maxConfigs: number = 200
-  let maxVlessConfigs: number = 10
+  let maxConfigs: number = 10
+  let maxVlessConfigs: number = 1
   let protocols: Array<string> = []
   let providers: Array<string> = []
   let alpnList: Array<string> = []
@@ -21,9 +20,9 @@ export async function GetConfigList(url: URL, env: Env): Promise<Array<Config>> 
   let settingsNotAvailable: boolean = true
 
   try {
-    maxConfigs = parseInt(await env.settings.get("MaxConfigs") || "200")
-    if (maxConfigs > 200) {
-      maxVlessConfigs = Math.ceil(maxConfigs / 20)
+    maxConfigs = parseInt(await env.settings.get("MaxConfigs") || "10")
+    if (maxConfigs > 10) {
+      maxVlessConfigs = 1
     }
     protocols = await env.settings.get("Protocols").then(val => {return val ? val.split("\n") : []})
     if (protocols.includes("vless")) {
@@ -47,10 +46,6 @@ export async function GetConfigList(url: URL, env: Env): Promise<Array<Config>> 
     includeOriginalConfigs = true
     includeMergedConfigs = true
     cleanDomainIPs = [MuddleDomain(url.hostname)]
-  }
-
-  if (includeOriginalConfigs && includeMergedConfigs) {
-      maxConfigs = Math.floor(maxConfigs / 2)
   }
 
   let configList: Array<any> = []
