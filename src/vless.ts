@@ -11,7 +11,7 @@ let proxyIP: string = ""
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
   let uuid: string | null = await env.settings.get("UUID")
-  let proxyIP: string | null = await env.settings.get("ProxyIP")
+  let proxyIP = await env.settings.get("ProxyIP")
   let configList: Array<Config> = []
   if (uuid) {
     for (let i = 0; i < max; i++) {
