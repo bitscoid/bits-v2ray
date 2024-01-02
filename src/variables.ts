@@ -34,11 +34,11 @@ export const defaultPFList: Array<string> = [
 
 export const cfPorts: Array<number> = [
 	443,
-	2053,
-	2083,
-	2087,
-	2096,
-	8443,
+	// 2053,
+	// 2083,
+	// 2087,
+	// 2096,
+	// 8443,
 ]
 
 export const supportedCiphers: Array<string> = [
