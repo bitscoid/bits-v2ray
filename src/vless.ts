@@ -30,7 +30,7 @@ export async function GetVlessConfigList(sni: string, addressList: Array<string>
 
 export async function VlessOverWSHandler(request: Request, env: Env) {
   uuid = uuid || await env.settings.get("UUID") || ""
-  proxyIP = proxyIP || await env.settings.get("ProxyIP") || ""
+  proxyIP = await env.settings.get("ProxyIP")
 	const [client, webSocket]: Array<WebSocket> = Object.values(new WebSocketPair)
 
 	webSocket.accept()
