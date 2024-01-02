@@ -119,13 +119,6 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
           </div>
         </div>
         <div class="mb-1 p-1">
-          <label for="ip-proxy" class="form-label fw-bold">
-            IP Proxy :
-          </label>
-          <input type="text" name="ip-proxy" class="form-control" id="ip-proxy" value="${ipProxy}" />
-          <div class="form-text"></div>
-        </div>
-        <div class="mb-1 p-1">
           <label for="max-configs" class="form-label fw-bold">
             Jumlah Proxy :
           </label>
