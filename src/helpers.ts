@@ -30,24 +30,24 @@ export function GetVlessConfig(no: number, uuid: UUID, sni: string, address: str
     address = sni
   }
   return {
-		name: `${no}-vless-worker-${address}`,
+		name: `${no}-${address}`,
 		type: "vless",
 		tls: true,
 		network: "ws",
 		port: port,
 		servername: sni,
 		uuid: uuid,
-		fp: "randomized",
-		alpn: "h2,http/1.1",
+		// fp: "randomized",
+		// alpn: "h2,http/1.1",
 		host: sni,
 		"ws-opts": {
-			path: "vless-ws/?ed=2048",
+			path: "/bits",
 			headers: {
 				Host: sni,
 			},
 		},
 		server: address,
-		path: "vless-ws/?ed=2048",
+		path: "/bits",
 	} as Config
 	// return `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=${fp}&alpn=${alpn}&type=ws&host=${sni}&path=vless-ws%2F%3Fed%3D2048#${no}-vless-worker-${address}`
 }
@@ -96,7 +96,7 @@ export function MuddleDomain(hostname: string): string {
   const domain: string = parts.slice(-2).join(".")
 
   const muddledDomain: string = domain.split("").map(
-	  char => Math.random() < 0.5 ? char.toLowerCase() : char.toUpperCase()
+	  char => Math.random() < 0.5 ? char.toLowerCase() : char.toLowerCase()
   ).join("")
   
   return subdomain + "." + muddledDomain
