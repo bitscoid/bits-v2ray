@@ -20,22 +20,22 @@ export async function GetConfigList(url: URL, env: Env): Promise<Array<Config>> 
   let settingsNotAvailable: boolean = true
 
   try {
-    maxConfigs = parseInt(await env.settings.get("MaxConfigs") || "10")
+    maxConfigs = parseInt(await env.configs.get("MaxConfigs") || "10")
     if (maxConfigs > 10) {
       maxVlessConfigs = 1
     }
-    protocols = await env.settings.get("Protocols").then(val => {return val ? val.split("\n") : []})
+    protocols = await env.configs.get("Protocols").then(val => {return val ? val.split("\n") : []})
     if (protocols.includes("vless")) {
       maxConfigs = maxConfigs - maxVlessConfigs
     }
-    providers = await env.settings.get("Providers").then(val => {return val ? val.split("\n") : []})
-    alpnList = await env.settings.get("ALPNs").then(val => {return val ? val.split("\n") : []})
-    fingerPrints = await env.settings.get("FingerPrints").then(val => {return val ? val.split("\n") : []})
-    includeOriginalConfigs = (await env.settings.get("IncludeOriginalConfigs") || "yes") == "yes"
-    includeMergedConfigs = ((await env.settings.get("IncludeMergedConfigs") || "yes") == "yes") && protocols.includes("vmess")
-    cleanDomainIPs = await env.settings.get("CleanDomainIPs").then(val => {return val ? val.split("\n") : []})
-    settingsNotAvailable = (await env.settings.get("MaxConfigs")) === null
-    myConfigs = (await env.settings.get("Configs"))?.split("\n") || []
+    providers = await env.configs.get("Providers").then(val => {return val ? val.split("\n") : []})
+    alpnList = await env.configs.get("ALPNs").then(val => {return val ? val.split("\n") : []})
+    fingerPrints = await env.configs.get("FingerPrints").then(val => {return val ? val.split("\n") : []})
+    includeOriginalConfigs = (await env.configs.get("IncludeOriginalConfigs") || "yes") == "yes"
+    includeMergedConfigs = ((await env.configs.get("IncludeMergedConfigs") || "yes") == "yes") && protocols.includes("vmess")
+    cleanDomainIPs = await env.configs.get("CleanDomainIPs").then(val => {return val ? val.split("\n") : []})
+    settingsNotAvailable = (await env.configs.get("MaxConfigs")) === null
+    myConfigs = (await env.configs.get("Configs"))?.split("\n") || []
   } catch { }
   
   if (settingsNotAvailable) {
