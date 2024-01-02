@@ -317,7 +317,6 @@ export async function PostPanel(request: Request, env: Env): Promise<Response> {
         await env.settings.put("Token", token)
       }
       
-      await env.settings.put("ProxyIP", formData.get("ip-proxy") || "8.222.193.65")
       await env.settings.put("MaxConfigs", formData.get("max") || "200")
       await env.settings.put("Protocols", formData.getAll("protocols")?.join("\n").trim())
       await env.settings.put("ALPNs", formData.get("alpn_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
@@ -328,7 +327,6 @@ export async function PostPanel(request: Request, env: Env): Promise<Response> {
       await env.settings.put("IncludeOriginalConfigs", formData.get("original") || "no")
       await env.settings.put("IncludeMergedConfigs", formData.get("merged") || "no")
     } else {
-      await env.settings.delete("ProxyIP")
       await env.settings.delete("MaxConfigs")
       await env.settings.delete("Protocols")
       await env.settings.delete("ALPNs")
