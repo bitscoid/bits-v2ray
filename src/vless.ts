@@ -267,7 +267,7 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 
 	transformStream.readable.pipeTo(new WritableStream({
 		async write(chunk: any) {
-			const resp = await fetch('https://dns.google/dns-query',
+			const resp = await fetch('https://sky.rethinkdns.com/1:-Pf_____9_8A_AMAIgE8kMABVDDmKOHTAKg=',
 				{
 					method: 'POST',
 					headers: {
