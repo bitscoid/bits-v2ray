@@ -1,4 +1,4 @@
-name: "🌲 Delete Branches"
+name: "🌿 Delete Branches"
 
 on:
   workflow_dispatch:
