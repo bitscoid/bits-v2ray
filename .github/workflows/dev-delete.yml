@@ -1,4 +1,4 @@
-name: "🌿 Delete Branches"
+name: "🌿 Delete Dev Branches"
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
 jobs:
   create_branches:
     runs-on: ubuntu-latest
-    name: "🌲 Delete Branches"
+    name: "🌲 Delete Dev Branches"
     env:
       EMAIL: ${{ secrets.GH_MAIL }}
       NAME: ${{ secrets.GH_USER }}
       TOKEN: ${{ secrets.GH_TOKEN }}
       BRANCH_BASE_NAME: x
-      BRANCH_COUNT: 300
+      BRANCH_COUNT: 100
 
     steps:
       - name: ⚙️ Setup
