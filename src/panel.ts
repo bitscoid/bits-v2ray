@@ -7,28 +7,28 @@ import { Env } from "./interfaces"
 export async function GetPanel(request: Request, env: Env): Promise<Response> {
   const url: URL = new URL(request.url)
   try {
-    const hash: string | null = await env.settings.get("Password")
-    const token: string | null = await env.settings.get("Token")
+    const hash: string | null = await env.configs.get("Password")
+    const token: string | null = await env.configs.get("Token")
 
     if (hash && url.searchParams.get("token") != token) {
       return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/login`, 302)
     }
 		
-		const proxyIP: string = await env.settings.get("ProxyIP") || "8.222.193.65"
-    const maxConfigs: number = parseInt(await env.settings.get("MaxConfigs") || "10")
-    const protocols: Array<string> = (await env.settings.get("Protocols"))?.split("\n") || defaultProtocols
-    const alpnList: Array<string> = (await env.settings.get("ALPNs"))?.split("\n") || defaultALPNList
-    const fingerPrints: Array<string> = (await env.settings.get("FingerPrints"))?.split("\n") || defaultPFList
-    const providers: Array<string> = (await env.settings.get("Providers"))?.split("\n") || defaultProviders
-    const cleanDomainIPs: Array<string> = (await env.settings.get("CleanDomainIPs"))?.split("\n") || []
-    const configs: Array<string> = (await env.settings.get("Configs"))?.split("\n") || []
-    const includeOriginalConfigs: string = await env.settings.get("IncludeOriginalConfigs") || "yes"
-    const includeMergedConfigs: string = await env.settings.get("IncludeMergedConfigs") || "yes"
+    const proxyIP: string = "IPPROXYHERE"
+    const maxConfigs: number = parseInt(await env.configs.get("MaxConfigs") || "10")
+    const protocols: Array<string> = (await env.configs.get("Protocols"))?.split("\n") || defaultProtocols
+    const alpnList: Array<string> = (await env.configs.get("ALPNs"))?.split("\n") || defaultALPNList
+    const fingerPrints: Array<string> = (await env.configs.get("FingerPrints"))?.split("\n") || defaultPFList
+    const providers: Array<string> = (await env.configs.get("Providers"))?.split("\n") || defaultProviders
+    const cleanDomainIPs: Array<string> = (await env.configs.get("CleanDomainIPs"))?.split("\n") || []
+    const configs: Array<string> = (await env.configs.get("Configs"))?.split("\n") || []
+    const includeOriginalConfigs: string = await env.configs.get("IncludeOriginalConfigs") || "yes"
+    const includeMergedConfigs: string = await env.configs.get("IncludeMergedConfigs") || "yes"
 
-    var uuid: string = await env.settings.get("UUID") || ""
+    var uuid: string = await env.configs.get("UUID") || ""
     if (!IsValidUUID(uuid)) {
       uuid = uuidv4()
-      await env.settings.put("UUID", uuid)
+      await env.configs.put("UUID", uuid)
     }
 		
     var htmlMessage = ""
@@ -119,13 +119,13 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
             </div>
           </div>
         </div>
-        <div class="mb-1 p-1">
+        <!--div class="mb-1 p-1">
           <label for="proxy-ip" class="form-label fw-bold">
             IP Proxy :
           </label>
           <input type="text" name="proxy-ip" class="form-control" id="proxy-ip" value="${proxyIP}" />
           <div class="form-text"></div>
-        </div>
+        </div-->
         <div class="mb-1 p-1">
           <label for="max-configs" class="form-label fw-bold">
             Jumlah Proxy :
@@ -277,7 +277,7 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
       </div>
 
       <div class="form-group col-md-6 mx-auto mx-5 my-2 p-1 border bg-danger text-center">
-        <p>Variabel "settings" tidak ditemukan ! Silahkan buat namespace di Workers / KV ! Tambahkan variabel "settings" di pengaturan workers.</p>
+        <p>Variabel "configs" tidak ditemukan ! Silahkan buat namespace di Workers / KV ! Tambahkan variabel "configs" di pengaturan workers.</p>
       </div>
       <div class="form-group col-md-6 mx-auto mx-5 my-2 p-1 border bg-success text-white text-center">
         <p>Anda bisa menggunakan BITS VPN tanpa BITS VPN Dashboard.</p>
@@ -293,18 +293,18 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
 
 export async function PostPanel(request: Request, env: Env): Promise<Response> {
   const url: URL = new URL(request.url)
-  var token: string | null = await env.settings.get("Token")
+  var token: string | null = await env.configs.get("Token")
   try {
     const formData = await request.formData()
-    var hashedPassword: string | null = await env.settings.get("Password")
+    var hashedPassword: string | null = await env.configs.get("Password")
 
     if (hashedPassword && url.searchParams.get("token") != token) {
       return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}/login`, 302)
     }
 
     if (formData.get("reset_password")) {
-      await env.settings.delete("Password")
-      await env.settings.delete("Token")
+      await env.configs.delete("Password")
+      await env.configs.delete("Token")
       return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}?message=success`, 302)
     } else if (formData.get("save")) {
       const password: string | null = formData.get("password")
@@ -314,34 +314,34 @@ export async function PostPanel(request: Request, env: Env): Promise<Response> {
         }
         hashedPassword = await bcrypt.hash(password, 10);
         token = GenerateToken(24)
-        await env.settings.put("Password", hashedPassword)
-        await env.settings.put("Token", token)
+        await env.configs.put("Password", hashedPassword)
+        await env.configs.put("Token", token)
       }
       
-      await env.settings.put("ProxyIP", formData.get("proxy-ip") || "8.222.193.65")
-      await env.settings.put("MaxConfigs", formData.get("max") || "200")
-      await env.settings.put("Protocols", formData.getAll("protocols")?.join("\n").trim())
-      await env.settings.put("ALPNs", formData.get("alpn_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
-      await env.settings.put("FingerPrints", formData.get("fp_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
-      await env.settings.put("Providers", formData.get("providers")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
-      await env.settings.put("CleanDomainIPs", formData.get("clean_ips")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
-      await env.settings.put("Configs", formData.get("configs")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
-      await env.settings.put("IncludeOriginalConfigs", formData.get("original") || "no")
-      await env.settings.put("IncludeMergedConfigs", formData.get("merged") || "no")
+      await env.configs.put("ProxyIP", "IPPROXYHERE")
+      await env.configs.put("MaxConfigs", formData.get("max") || "200")
+      await env.configs.put("Protocols", formData.getAll("protocols")?.join("\n").trim())
+      await env.configs.put("ALPNs", formData.get("alpn_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
+      await env.configs.put("FingerPrints", formData.get("fp_list")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
+      await env.configs.put("Providers", formData.get("providers")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
+      await env.configs.put("CleanDomainIPs", formData.get("clean_ips")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
+      await env.configs.put("Configs", formData.get("configs")?.trim().split("\n").map(str => str.trim()).join("\n") || "")
+      await env.configs.put("IncludeOriginalConfigs", formData.get("original") || "no")
+      await env.configs.put("IncludeMergedConfigs", formData.get("merged") || "no")
     } else {
-      await env.settings.delete("ProxyIP")
-      await env.settings.delete("MaxConfigs")
-      await env.settings.delete("Protocols")
-      await env.settings.delete("ALPNs")
-      await env.settings.delete("FingerPrints")
-      await env.settings.delete("Providers")
-      await env.settings.delete("CleanDomainIPs")
-      await env.settings.delete("Configs")
-      await env.settings.delete("IncludeOriginalConfigs")
-      await env.settings.delete("IncludeMergedConfigs")
-      await env.settings.delete("UUID")
-      await env.settings.delete("Password")
-      await env.settings.delete("Token")
+      await env.configs.delete("ProxyIP")
+      await env.configs.delete("MaxConfigs")
+      await env.configs.delete("Protocols")
+      await env.configs.delete("ALPNs")
+      await env.configs.delete("FingerPrints")
+      await env.configs.delete("Providers")
+      await env.configs.delete("CleanDomainIPs")
+      await env.configs.delete("Configs")
+      await env.configs.delete("IncludeOriginalConfigs")
+      await env.configs.delete("IncludeMergedConfigs")
+      await env.configs.delete("UUID")
+      await env.configs.delete("Password")
+      await env.configs.delete("Token")
     }
 
     return Response.redirect(`${url.protocol}//${url.hostname}${url.port != "443" ? ":" + url.port : ""}?message=success${token ? "&token=" + token : ""}`, 302)
