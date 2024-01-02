@@ -11,6 +11,7 @@ let proxyIP: string = ""
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
   let uuid: string | null = await env.settings.get("UUID")
+  let proxyIP: string | null = await env.settings.get("ProxyIP")
   let configList: Array<Config> = []
   if (uuid) {
     for (let i = 0; i < max; i++) {
@@ -29,6 +30,7 @@ export async function GetVlessConfigList(sni: string, addressList: Array<string>
 
 export async function VlessOverWSHandler(request: Request, env: Env) {
   uuid = uuid || await env.settings.get("UUID") || ""
+  proxyIP = proxyIP || await env.settings.get("ProxyIP") || ""
 	const [client, webSocket]: Array<WebSocket> = Object.values(new WebSocketPair)
 
 	webSocket.accept()
@@ -91,7 +93,7 @@ export async function VlessOverWSHandler(request: Request, env: Env) {
 				return
 			}
 
-			HandleCPOutbound(remoteSocketWapper, addressRemote, portRemote, rawClientData, webSocket, vlessResponseHeader)
+			HandleCPOutbound(remoteSocketWapper, addressRemote, portRemote, rawClientData, webSocket, vlessResponseHeader, proxyIP)
 		}
 	})).catch((err) => { })
 
@@ -297,7 +299,7 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 	}
 }
 
-async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote: string, portRemote: number, rawClientData: Uint8Array, webSocket: WebSocket, vlessResponseHeader: Uint8Array): Promise<void> {
+async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote: string, portRemote: number, rawClientData: Uint8Array, webSocket: WebSocket, vlessResponseHeader: Uint8Array, proxyIP: string): Promise<void> {
 	async function connectAndWrite(address: string, port: number) {
 		const tcpSocket: Socket = connect({
 			hostname: address,
@@ -311,7 +313,6 @@ async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote
 	}
 
 	async function retry() {
-  		let proxyIP: string | null = "194.36.179.240"
 		const tcpSocket: Socket = await connectAndWrite(proxyIP || addressRemote, portRemote)
 		tcpSocket.closed.catch((error: any) => { }).finally(() => {
 			SafeCloseWebSocket(webSocket)
