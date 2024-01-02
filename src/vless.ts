@@ -6,12 +6,12 @@ import { RemoteSocketWrapper, CustomArrayBuffer, VlessHeader, UDPOutbound, Confi
 
 const WS_READY_STATE_OPEN: number = 1
 const WS_READY_STATE_CLOSING: number = 2
-let uuid: string = ""
-let proxyIP: string = ""
+let uuid: string = "fef47eb7-884d-4490-8181-74481de3b428"
+let proxyIP: string = "IPPROXYHERE"
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
-  let uuid: string | null = await env.settings.get("UUID")
-  let proxyIP: string | null = await env.settings.get("ProxyIP")
+  let uuid: string | null = "fef47eb7-884d-4490-8181-74481de3b428"
+  let proxyIP: string | null = "IPPROXYHERE"
   let configList: Array<Config> = []
   if (uuid) {
     for (let i = 0; i < max; i++) {
@@ -29,8 +29,8 @@ export async function GetVlessConfigList(sni: string, addressList: Array<string>
 }
 
 export async function VlessOverWSHandler(request: Request, env: Env) {
-  uuid = uuid || await env.settings.get("UUID") || ""
-  proxyIP = await env.settings.get("ProxyIP")
+	uuid = "fef47eb7-884d-4490-8181-74481de3b428"
+	proxyIP = "fef47eb7-884d-4490-8181-74481de3b428"
 	const [client, webSocket]: Array<WebSocket> = Object.values(new WebSocketPair)
 
 	webSocket.accept()
