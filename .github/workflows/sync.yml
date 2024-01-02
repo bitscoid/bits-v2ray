@@ -1,4 +1,4 @@
-name: "🔄 Sync"
+name: "🔄 Sync Branches"
 
 on:
   workflow_dispatch:
