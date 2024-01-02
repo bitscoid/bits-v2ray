@@ -299,7 +299,7 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 
 async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote: string, portRemote: number, rawClientData: Uint8Array, webSocket: WebSocket, vlessResponseHeader: Uint8Array): Promise<void> {
 	async function connectAndWrite(address: string, port: number, env: Env) {
-  		const proxyIP: string | null = await env.settings.get("UUID")
+  		const proxyIP: string | null = await env.settings.get("ProxyIP")
 		const tcpSocket: Socket = connect({
 			hostname: address,
 			port: port,
