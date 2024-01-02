@@ -7,10 +7,9 @@ import { RemoteSocketWrapper, CustomArrayBuffer, VlessHeader, UDPOutbound, Confi
 const WS_READY_STATE_OPEN: number = 1
 const WS_READY_STATE_CLOSING: number = 2
 let uuid: string = ""
-var proxyIP: string = ""
+const proxyIP: string = ""
 
 export async function GetVlessConfigList(sni: string, addressList: Array<string>, max: number, env: Env) {
-  globalThis.proxyIP = await env.settings.get("ProxyIP")
   let uuid: string | null = await env.settings.get("UUID")
   let configList: Array<Config> = []
   if (uuid) {
@@ -299,7 +298,8 @@ async function HandleUDPOutbound(webSocket: WebSocket, vlessResponseHeader: Arra
 }
 
 async function HandleCPOutbound(remoteSocket: RemoteSocketWrapper, addressRemote: string, portRemote: number, rawClientData: Uint8Array, webSocket: WebSocket, vlessResponseHeader: Uint8Array): Promise<void> {
-	async function connectAndWrite(address: string, port: number) {
+	async function connectAndWrite(address: string, port: number, env: Env) {
+  		const proxyIP: string | null = await env.settings.get("UUID")
 		const tcpSocket: Socket = connect({
 			hostname: address,
 			port: port,
