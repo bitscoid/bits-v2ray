@@ -8,18 +8,21 @@ jobs:
     runs-on: ubuntu-latest
     name: "🌲 Create Branches"
     env:
+      EMAIL: ${{ secrets.GH_EMAIL }}
+      NAME: ${{ secrets.GH_USERNAME }}
+      TOKEN: ${{ secrets.TOKEN }}
       BRANCH_BASE_NAME: x
       BRANCH_COUNT: 300
 
     steps:
       - name: ⚙️ Setup
         run: |
-          git config --global user.email "${{ secrets.GH_EMAIL }}"
-          git config --global user.name "${{ secrets.GH_USERNAME }}"
+          git config --global user.email "${{ env.EMAIL }}"
+          git config --global user.name "${{ env.NAME }}"
 
       - name: 📦 Clone
         run: |
-          git clone https://${{ secrets.TOKEN }}@github.com/${{github.repository}}.git
+          git clone https://${{ env.TOKEN }}@github.com/${{github.repository}}.git
           cd $(echo ${{github.repository}} | awk -F'/' '{print $2}')
 
       - name: 🌿 Push Branches
