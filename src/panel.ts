@@ -15,7 +15,7 @@ export async function GetPanel(request: Request, env: Env): Promise<Response> {
     }
 		
 		const proxyIP: string = await env.settings.get("ProxyIP") || "8.222.193.65"
-    const maxConfigs: number = parseInt(await env.settings.get("MaxConfigs") || "200")
+    const maxConfigs: number = parseInt(await env.settings.get("MaxConfigs") || "10")
     const protocols: Array<string> = (await env.settings.get("Protocols"))?.split("\n") || defaultProtocols
     const alpnList: Array<string> = (await env.settings.get("ALPNs"))?.split("\n") || defaultALPNList
     const fingerPrints: Array<string> = (await env.settings.get("FingerPrints"))?.split("\n") || defaultPFList
