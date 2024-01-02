@@ -1,4 +1,4 @@
-name: Deploy Worker
+name: ⛅ Deploy Workers
 on:
   push:
   pull_request:
