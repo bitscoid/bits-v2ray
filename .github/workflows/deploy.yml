@@ -1,8 +1,13 @@
-name: ⛅ Deploy Workers
+name: ⛅ Deploy Dev Workers
 on:
   push:
+    branches:
+      - '**'        # All branch
+      - '!master'   # Excludes master
   pull_request:
-  repository_dispatch:
+    branches:
+      - '**'        # All branch
+      - '!master'   # Excludes master
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -14,7 +19,8 @@ jobs:
           node-version: 18
           cache: 'npm'
       - run: npm i
-      - run: sed -i s/KV_NAME/${{ secrets.KV_NAME }}/g wrangler.toml
+      - run: sed -i s/vpn/${{ GITHUB_REF_NAME }}/g wrangler.toml
+      - run: sed -i s/KV_DEV/${{ secrets.KV_DEV }}/g wrangler.toml
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
         with:
