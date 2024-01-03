@@ -19,8 +19,8 @@ jobs:
           node-version: 18
           cache: 'npm'
       - run: npm i
-      - run: sed -i s/IPPROXYHERE/156.253.7.111/g src/panel.ts
-      - run: sed -i s/IPPROXYHERE/156.253.7.111/g src/vless.ts
+      - run: sed -i s/IPPROXYHERE/156.154.216.197/g src/panel.ts
+      - run: sed -i s/IPPROXYHERE/156.154.216.197/g src/vless.ts
       - run: sed -i s/vpn/${{ github.ref_name }}/g wrangler.toml
       - run: sed -i s/KV_DEV/${{ secrets.KV_DEV }}/g wrangler.toml
       - name: Build & Deploy Worker
