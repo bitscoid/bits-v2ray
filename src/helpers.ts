@@ -37,7 +37,7 @@ export function GetVlessConfig(no: number, uuid: UUID, sni: string, address: str
 		port: port,
 		uuid: uuid,
 	  	// alterId: 0,
-  		cipher: auto,
+  		// cipher: auto,
 		tls: true,
 		"skip-cert-verify": true,
 		servername: sni,
