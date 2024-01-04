@@ -183,9 +183,9 @@ export function DecodeConfig(configStr: string): Config {
       conf = JSON.parse(Buffer.from(configStr.substring(8), "base64").toString("utf-8"))
       conf = {
         name: conf?.ps || conf?.name,
+        type: "vmess",
         server: conf?.add,
         port: conf?.port || 443,
-        type: "vmess",
         uuid: conf?.id || conf?.password,
         alterId: conf?.aid || 0,
         cipher: conf?.cipher || "auto",
@@ -193,8 +193,8 @@ export function DecodeConfig(configStr: string): Config {
         "skip-cert-verify": true,
         servername: conf?.sni || conf?.host,
         network: conf?.net,
-        path: conf?.path || "",
-        host: conf?.host || conf?.sni,
+        // path: conf?.path || "",
+        // host: conf?.host || conf?.sni,
         // alpn: conf?.alpn,
         // fp: conf["client-fingerprint"] || conf?.fp,
         "ws-opts": {
@@ -217,23 +217,23 @@ export function DecodeConfig(configStr: string): Config {
     
       conf = {
         name: match.groups.ps,
+        type: match.groups.type,
         server: match.groups.server,
         port: match.groups.port || 443,
-        type: match.groups.type,
         uuid: match.groups.id,
         alterId: optionsObj.aid || 0,
         cipher: "auto",
-        security: optionsObj.security || "",
+        // security: optionsObj.security || "",
         tls: (optionsObj.security || "none") == "tls",
         "skip-cert-verify": true,
         servername: optionsObj.sni || "",
         network: optionsObj.type || (optionsObj.net || "tcp"),
-        path: optionsObj.path || "",
-        host: optionsObj.host || optionsObj.Host || "",
+        // path: optionsObj.path || "",
+        // host: optionsObj.host || optionsObj.Host || "",
         // alpn: optionsObj.alpn || "",
         // fp: optionsObj.fp || "",
-        pbk: optionsObj.pbk || "",
-        headerType: optionsObj.headerType || "",
+        // pbk: optionsObj.pbk || "",
+        // headerType: optionsObj.headerType || "",
         "ws-opts": {
           path: optionsObj.path || "",
           headers: {
