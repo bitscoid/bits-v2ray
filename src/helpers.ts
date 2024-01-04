@@ -29,25 +29,30 @@ export function GetVlessConfig(no: number, uuid: UUID, sni: string, address: str
 	if (address.toLowerCase() == sni.toLowerCase()) {
     address = sni
   }
+
   return {
 		name: `${no}-${address}`,
 		type: "vless",
-		tls: true,
-		network: "ws",
+		server: address,
 		port: port,
-		servername: sni,
 		uuid: uuid,
+	  	alterId: 0,
+  		cipher: auto,
+		tls: true,
+		"skip-cert-verify": true,
+		servername: sni,
+		network: "ws",
 		// fp: "randomized",
 		// alpn: "h2,http/1.1",
-		host: sni,
+		// host: sni,
+		// path: "/bits",
 		"ws-opts": {
 			path: "/bits",
 			headers: {
 				Host: sni,
 			},
 		},
-		server: address,
-		path: "/bits",
+  		udp: true,
 	} as Config
 	// return `vless://${uuid}@${address}:${port}?encryption=none&security=tls&sni=${sni}&fp=${fp}&alpn=${alpn}&type=ws&host=${sni}&path=vless-ws%2F%3Fed%3D2048#${no}-vless-worker-${address}`
 }
